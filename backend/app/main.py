@@ -32,9 +32,23 @@ async def root() -> dict[str, str]:
     return {"message": f"{settings.app_name} is running"}
 
 
-@app.get(f"{settings.api_v1_prefix}/health", tags=["System"])
-async def healthcheck() -> dict[str, str]:
+def _health_payload() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/healthz", tags=["System"])
+async def healthcheck_render() -> dict[str, str]:
+    return _health_payload()
+
+
+@app.get("/health", tags=["System"])
+async def healthcheck_basic() -> dict[str, str]:
+    return _health_payload()
+
+
+@app.get(f"{settings.api_v1_prefix}/health", tags=["System"])
+async def healthcheck_api() -> dict[str, str]:
+    return _health_payload()
 
 
 app.include_router(auth_router, prefix=settings.api_v1_prefix)
