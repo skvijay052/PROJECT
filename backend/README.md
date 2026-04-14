@@ -259,6 +259,8 @@ EXPO_PUBLIC_API_BASE_URL=https://bandhanaa-backend.onrender.com/api/v1
 - Render automatically redeploys when you push to the linked GitHub branch.
 - Render requires your web service to bind to `0.0.0.0` and use the platform `PORT`.
 - Because this backend is inside `backend/`, the `rootDir: backend` setting in [render.yaml](/d:/PROJECT/render.yaml:1) is important.
+- Render Free web services spin down after 15 minutes of no inbound traffic, so the first request after idle can be slow.
+- Render Free web services are best for testing, demos, or hobby use instead of production.
 
 ## Main Endpoints
 
