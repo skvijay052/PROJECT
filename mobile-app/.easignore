@@ -3,4 +3,3 @@ node_modules
 .expo-export-check
 npm-debug.log*
 *.log
-.env

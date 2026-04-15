@@ -28,7 +28,9 @@ export const isApiConfigured = Boolean(resolvedApiBaseUrl);
 
 function getApiBaseUrl() {
   if (!isApiConfigured) {
-    throw new Error('Missing EXPO_PUBLIC_API_BASE_URL or EXPO_PUBLIC_API_BASE_URL_LAN in mobile-app/.env');
+    throw new Error(
+      'Missing EXPO_PUBLIC_API_BASE_URL or EXPO_PUBLIC_API_BASE_URL_LAN. Set them in mobile-app/.env for local development or in EAS environment variables for cloud builds.'
+    );
   }
 
   return resolvedApiBaseUrl;

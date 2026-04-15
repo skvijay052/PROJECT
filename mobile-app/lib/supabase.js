@@ -27,7 +27,7 @@ function registerAutoRefresh(client) {
 export function getSupabaseClient() {
   if (!isSupabaseConfigured) {
     throw new Error(
-      'Missing EXPO_PUBLIC_SUPABASE_URL or EXPO_PUBLIC_SUPABASE_ANON_KEY in mobile-app/.env'
+      'Missing EXPO_PUBLIC_SUPABASE_URL or EXPO_PUBLIC_SUPABASE_ANON_KEY. Set them in mobile-app/.env for local development or in EAS environment variables for cloud builds.'
     );
   }
 
