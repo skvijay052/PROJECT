@@ -36,7 +36,9 @@ import { Colors, Radii, Shadows, Spacing } from '../theme/theme';
 const EditProfileScreen = ({ navigation, route }) => {
   const isOnboarding = route?.params?.onboarding === true;
   const syncMessage = route?.params?.syncMessage || '';
+  const registeredName = route?.params?.registeredName || '';
   const scrollViewRef = useRef(null);
+  const [name, setName] = useState(registeredName);
   const [age, setAge] = useState('');
   const [maritalStatus, setMaritalStatus] = useState('');
   const [profileVisibility, setProfileVisibility] = useState('Public');
@@ -57,6 +59,7 @@ const EditProfileScreen = ({ navigation, route }) => {
     try {
       setIsLoading(true);
       const profile = await getMyProfile();
+      setName(profile?.name || registeredName || '');
       setAge(profile?.age ? String(profile.age) : '');
       setMaritalStatus(profile?.marital_status || '');
       setProfileVisibility(profile?.profile_visibility || 'Public');
@@ -71,13 +74,15 @@ const EditProfileScreen = ({ navigation, route }) => {
       setProfileImage(profile?.image || '');
       setBio(profile?.bio || '');
     } catch (error) {
-      if (error?.status !== 404) {
+      if (error?.status === 404) {
+        setName(registeredName || '');
+      } else {
         Alert.alert('Load failed', error?.message || 'Unable to load your profile.');
       }
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [registeredName]);
 
   const religionOptions = useMemo(
     () => withSelectedOption(RELIGION_OPTIONS, religion),
@@ -170,6 +175,7 @@ const EditProfileScreen = ({ navigation, route }) => {
   }, []);
 
   const canSave = useMemo(() => (
+    name.trim().length > 0 ||
     age.trim().length > 0 ||
     maritalStatus.trim().length > 0 ||
     profileVisibility.trim().length > 0 ||
@@ -182,7 +188,7 @@ const EditProfileScreen = ({ navigation, route }) => {
     stateName.trim().length > 0 ||
     country.trim().length > 0 ||
     bio.trim().length > 0
-  ), [age, maritalStatus, profileVisibility, height, religion, education, profession, caste, city, stateName, country, bio]);
+  ), [name, age, maritalStatus, profileVisibility, height, religion, education, profession, caste, city, stateName, country, bio]);
 
   const handleSave = async () => {
     if (isSaving || !canSave) return;
@@ -197,6 +203,7 @@ const EditProfileScreen = ({ navigation, route }) => {
     try {
       setIsSaving(true);
       await upsertMyProfile({
+        name: name.trim() || null,
         age: parsedAge,
         marital_status: maritalStatus.trim() || null,
         profile_visibility: profileVisibility.trim() || 'Public',
@@ -258,9 +265,25 @@ const EditProfileScreen = ({ navigation, route }) => {
             ) : null}
 
             {isLoading ? (
-              <FormScreenSkeleton fields={11} showPhoto />
+              <FormScreenSkeleton fields={12} showPhoto />
             ) : (
               <>
+
+            <View style={styles.inputWrap}>
+              <Ionicons name="person-outline" size={18} color={Colors.muted} style={styles.inputLeftIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Full Name"
+                placeholderTextColor={Colors.muted}
+                value={name}
+                onChangeText={setName}
+                onFocus={(event) => scrollToFocusedInput(event.target)}
+                autoCapitalize="words"
+                autoCorrect={false}
+                textContentType="name"
+                maxLength={120}
+              />
+            </View>
 
             <View style={styles.inputWrap}>
               <Ionicons name="hourglass-outline" size={18} color={Colors.muted} style={styles.inputLeftIcon} />
