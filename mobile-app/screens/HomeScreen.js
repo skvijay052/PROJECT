@@ -258,7 +258,9 @@ const HomeScreen = ({ navigation }) => {
         </View>
 
         {showSkeleton ? (
-          <HomeFeedSkeleton />
+          <View style={styles.listContent}>
+            <HomeFeedSkeleton />
+          </View>
         ) : showError ? (
           <View style={styles.stateCard}>
             <Text style={styles.errorText}>{loadError}</Text>

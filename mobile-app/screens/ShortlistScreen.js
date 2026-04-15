@@ -132,7 +132,9 @@ const ShortlistScreen = ({ navigation }) => {
         </View>
 
         {showSkeleton ? (
-          <RowListSkeleton items={3} avatarSize={88} card />
+          <View style={styles.listContent}>
+            <RowListSkeleton items={3} avatarSize={88} card />
+          </View>
         ) : loadError && items.length === 0 ? (
           <View style={styles.stateCard}>
             <Text style={styles.errorText}>{loadError}</Text>

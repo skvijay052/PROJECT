@@ -181,7 +181,7 @@ const NotificationsScreen = ({ navigation }) => {
         </View>
 
         {showSkeleton ? (
-          <View style={styles.listContent}>
+          <View style={styles.skeletonContent}>
             <RowListSkeleton items={5} avatarSize={56} />
           </View>
         ) : loadError && items.length === 0 ? (
@@ -261,6 +261,11 @@ const styles = StyleSheet.create({
     color: Colors.muted,
   },
   listContent: {
+    paddingTop: Spacing.md,
+    paddingBottom: Spacing.xl + 90,
+  },
+  skeletonContent: {
+    paddingHorizontal: Spacing.lg,
     paddingTop: Spacing.md,
     paddingBottom: Spacing.xl + 90,
   },

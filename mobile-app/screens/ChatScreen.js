@@ -137,7 +137,9 @@ const ChatScreen = ({ navigation }) => {
         </View>
 
         {showSkeleton ? (
-          <RowListSkeleton items={6} avatarSize={64} />
+          <View style={styles.listContent}>
+            <RowListSkeleton items={6} avatarSize={64} />
+          </View>
         ) : loadError && threads.length === 0 ? (
           <View style={styles.stateCard}>
             <Text style={styles.errorText}>{loadError}</Text>

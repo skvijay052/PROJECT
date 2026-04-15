@@ -432,7 +432,9 @@ const MatchesScreen = ({ navigation }) => {
         </View>
 
         {showSkeleton ? (
-          <MatchesFeedSkeleton />
+          <View style={styles.listContent}>
+            <MatchesFeedSkeleton />
+          </View>
         ) : loadError && !hasAnyItems ? (
           <View style={styles.stateCard}>
             <Text style={styles.errorText}>{loadError}</Text>
