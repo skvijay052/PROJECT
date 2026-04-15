@@ -16,7 +16,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { getMyProfile, getMyProfileStats } from '../lib/api';
 import { ProfileScreenSkeleton } from '../components/Skeleton';
-import { getSupabaseClient } from '../lib/supabase';
+import { signOutSupabaseSession } from '../lib/supabase';
 import { Colors, Radii, Shadows, Spacing } from '../theme/theme';
 
 const ProfileScreen = ({ navigation }) => {
@@ -98,11 +98,7 @@ const ProfileScreen = ({ navigation }) => {
 
     try {
       setIsLoggingOut(true);
-      const { error } = await getSupabaseClient().auth.signOut();
-      if (error) {
-        throw error;
-      }
-
+      await signOutSupabaseSession();
       resetToWelcome();
     } catch (error) {
       Alert.alert('Logout failed', error.message);

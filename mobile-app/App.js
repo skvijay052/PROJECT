@@ -15,6 +15,7 @@ import SubscriptionScreen from './screens/SubscriptionScreen';
 import BlockedUsersScreen from './screens/BlockedUsersScreen';
 import ProfileDetailScreen from './screens/ProfileDetailScreen';
 import ChatDetailScreen from './screens/ChatDetailScreen';
+import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,7 @@ export default function App() {
           <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false, gestureEnabled: false }} />
           <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Main" component={MainTabNavigator} options={{ headerShown: false, gestureEnabled: false }} />
           <Stack.Screen

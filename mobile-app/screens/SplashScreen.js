@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 
-import { getSupabaseClient, isSupabaseConfigured } from '../lib/supabase';
+import { getSupabaseSession, isSupabaseConfigured } from '../lib/supabase';
 
 const SplashScreen = ({ navigation }) => {
   const logoScale = useRef(new Animated.Value(0.7)).current;
@@ -27,12 +27,9 @@ const SplashScreen = ({ navigation }) => {
       }
 
       try {
-        const { data, error } = await getSupabaseClient().auth.getSession();
-        if (error) throw error;
-
         navigation.reset({
           index: 0,
-          routes: [{ name: data?.session ? 'Main' : 'Welcome' }],
+          routes: [{ name: (await getSupabaseSession()) ? 'Main' : 'Welcome' }],
         });
       } catch (error) {
         navigation.reset({

@@ -1,4 +1,4 @@
-import { getSupabaseClient } from './supabase';
+import { getSupabaseSession } from './supabase';
 
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL?.trim();
 const lanApiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL_LAN?.trim();
@@ -37,15 +37,10 @@ function getApiBaseUrl() {
 }
 
 async function getAccessToken() {
-  const { data, error } = await getSupabaseClient().auth.getSession();
-
-  if (error) {
-    throw error;
-  }
-
-  const accessToken = data?.session?.access_token;
+  const session = await getSupabaseSession();
+  const accessToken = session?.access_token;
   if (!accessToken) {
-    throw new Error('No active Supabase session found.');
+    throw new Error('Your session expired. Please sign in again.');
   }
 
   return accessToken;
@@ -59,17 +54,20 @@ async function parseJsonSafely(response) {
   }
 }
 
-async function apiRequest(path, options = {}) {
-  const accessToken = await getAccessToken();
+async function sendApiRequest(path, options = {}) {
   const url = `${getApiBaseUrl()}${path}`;
   let response;
   const isFormData = Boolean(options.formData);
 
   try {
     const headers = {
-      Authorization: `Bearer ${accessToken}`,
       ...(options.headers || {}),
     };
+
+    if (options.auth !== false && !headers.Authorization) {
+      const accessToken = await getAccessToken();
+      headers.Authorization = `Bearer ${accessToken}`;
+    }
 
     if (!isFormData) {
       headers['Content-Type'] = 'application/json';
@@ -103,6 +101,17 @@ async function apiRequest(path, options = {}) {
   }
 
   return payload;
+}
+
+async function apiRequest(path, options = {}) {
+  return sendApiRequest(path, options);
+}
+
+async function publicApiRequest(path, options = {}) {
+  return sendApiRequest(path, {
+    ...options,
+    auth: false,
+  });
 }
 
 function appendLimit(params, limit) {
@@ -316,4 +325,15 @@ export async function deleteMyPhoto(photoId) {
 
 export async function syncAuthenticatedProfile(profilePatch = {}) {
   return upsertMyProfile(profilePatch);
+}
+
+export async function requestPasswordReset(email, newPassword, confirmPassword) {
+  return publicApiRequest('/auth/forgot-password', {
+    method: 'POST',
+    body: {
+      email,
+      new_password: newPassword,
+      confirm_password: confirmPassword,
+    },
+  });
 }

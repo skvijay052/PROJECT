@@ -9,6 +9,8 @@ from app.core.supabase_client import (
     get_supabase_admin_client,
 )
 from app.schemas.auth import (
+    AuthForgotPasswordRequest,
+    AuthMessage,
     AuthLoginRequest,
     AuthResult,
     AuthSessionOut,
@@ -124,6 +126,28 @@ def _get_profile_by_id(user_id: str) -> dict[str, Any] | None:
     )
     rows = getattr(response, "data", response) or []
     return _normalize_profile_row(rows[0]) if rows else None
+
+
+def _find_auth_user_by_email(email: str) -> Any | None:
+    normalized_email = email.strip().lower()
+    admin_api = get_supabase_admin_client().auth.admin
+    page = 1
+    per_page = 200
+
+    while True:
+        users = admin_api.list_users(page=page, per_page=per_page)
+        if not users:
+            return None
+
+        for user in users:
+            user_email = getattr(user, "email", None)
+            if isinstance(user_email, str) and user_email.strip().lower() == normalized_email:
+                return user
+
+        if len(users) < per_page:
+            return None
+
+        page += 1
 
 
 def _ensure_profile(
@@ -267,3 +291,35 @@ def login(payload: AuthLoginRequest) -> AuthResult:
         session=_serialize_session(auth_response.session),
         profile=profile,
     )
+
+
+@router.post("/forgot-password", response_model=AuthMessage)
+def forgot_password(payload: AuthForgotPasswordRequest) -> AuthMessage:
+    try:
+        auth_user = _find_auth_user_by_email(payload.email)
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Unable to search for user: {exc}",
+        ) from exc
+
+    if auth_user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No account found for this email address.",
+        )
+
+    try:
+        get_supabase_admin_client().auth.admin.update_user_by_id(
+            auth_user.id,
+            {
+                "password": payload.new_password,
+            },
+        )
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Password reset failed: {exc}",
+        ) from exc
+
+    return AuthMessage(message="Password updated successfully. Please sign in with your new password.")

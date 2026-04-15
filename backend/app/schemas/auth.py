@@ -58,6 +58,32 @@ class AuthLoginRequest(BaseModel):
         return _strip_string(value)
 
 
+class AuthForgotPasswordRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    email: str = Field(min_length=3, max_length=255)
+    new_password: str = Field(min_length=6, max_length=128)
+    confirm_password: str = Field(min_length=6, max_length=128)
+
+    @field_validator("email", mode="before")
+    @classmethod
+    def normalize_email(cls, value: str | None) -> str | None:
+        return _strip_string(value)
+
+    @field_validator("new_password", "confirm_password", mode="before")
+    @classmethod
+    def normalize_passwords(cls, value: str | None) -> str | None:
+        return _strip_string(value)
+
+    @field_validator("confirm_password")
+    @classmethod
+    def validate_confirm_password(cls, value: str, info) -> str:
+        new_password = info.data.get("new_password")
+        if new_password and value != new_password:
+            raise ValueError("confirm_password must match new_password")
+        return value
+
+
 class AuthUserOut(BaseModel):
     id: str
     email: str | None = None
@@ -78,3 +104,7 @@ class AuthResult(BaseModel):
     user: AuthUserOut
     session: AuthSessionOut | None = None
     profile: ProfileDetail | None = None
+
+
+class AuthMessage(BaseModel):
+    message: str

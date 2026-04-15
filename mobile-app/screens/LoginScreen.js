@@ -178,7 +178,11 @@ const LoginScreen = ({ navigation }) => {
                   </Pressable>
                 </View>
 
-                <Pressable hitSlop={10} style={styles.forgotBtn}>
+                <Pressable
+                  hitSlop={10}
+                  style={styles.forgotBtn}
+                  onPress={() => navigation.navigate('ForgotPassword')}
+                >
                   <Text style={styles.forgotText}>Forgot Password?</Text>
                 </Pressable>
               </>
