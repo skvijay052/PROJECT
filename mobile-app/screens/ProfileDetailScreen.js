@@ -26,6 +26,7 @@ import {
   sendInterest,
   updateInterestStatus,
 } from '../lib/api';
+import { getProfileImageSource, hasProfileImage } from '../lib/profileImage';
 import { Colors, Radii, Shadows, Spacing } from '../theme/theme';
 
 const FALLBACK_PROFILE = {
@@ -41,7 +42,7 @@ const FALLBACK_PROFILE = {
   state: '',
   country: '',
   bio: '',
-  image: 'https://via.placeholder.com/900x1200',
+  image: '',
   isOnline: false,
 };
 
@@ -110,7 +111,7 @@ const ProfileDetailScreen = ({ navigation, route }) => {
 
     if (initialPhotos.length > 0) return initialPhotos;
     if (routeProfile?.image) return [routeProfile.image];
-    return [FALLBACK_PROFILE.image];
+    return [''];
   });
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [isInterestActionLoading, setIsInterestActionLoading] = useState(false);
@@ -167,7 +168,7 @@ const ProfileDetailScreen = ({ navigation, route }) => {
           if (
             response.image &&
             (photoUrls.length === 0 ||
-              (photoUrls.length === 1 && photoUrls[0] === FALLBACK_PROFILE.image))
+              (photoUrls.length === 1 && !hasProfileImage(photoUrls[0])))
           ) {
             setPhotoUrls([response.image]);
             setActivePhotoIndex(0);
@@ -574,7 +575,7 @@ const ProfileDetailScreen = ({ navigation, route }) => {
               {photoUrls.map((photoUrl, index) => (
                 <Image
                   key={`${photoUrl}-${index}`}
-                  source={{ uri: photoUrl }}
+                  source={getProfileImageSource(photoUrl)}
                   style={styles.heroSlide}
                   blurRadius={profile.photo_blurred ? 24 : 0}
                 />

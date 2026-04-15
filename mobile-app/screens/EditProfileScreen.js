@@ -19,6 +19,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { FormScreenSkeleton } from '../components/Skeleton';
 import SelectField from '../components/SelectField';
 import { getMyProfile, upsertMyProfile } from '../lib/api';
+import { getProfileImageSource, hasProfileImage } from '../lib/profileImage';
 import {
   COUNTRY_OPTIONS,
   EDUCATION_OPTIONS,
@@ -189,6 +190,7 @@ const EditProfileScreen = ({ navigation, route }) => {
     country.trim().length > 0 ||
     bio.trim().length > 0
   ), [name, age, maritalStatus, profileVisibility, height, religion, education, profession, caste, city, stateName, country, bio]);
+  const hasUploadedProfileImage = hasProfileImage(profileImage);
 
   const handleSave = async () => {
     if (isSaving || !canSave) return;
@@ -400,20 +402,16 @@ const EditProfileScreen = ({ navigation, route }) => {
 
             <View style={styles.previewCard}>
               <Text style={styles.previewLabel}>Profile Photo</Text>
-              {profileImage ? (
-                <Image source={{ uri: profileImage }} style={styles.previewImage} />
-              ) : (
-                <View style={styles.emptyPhotoState}>
-                  <Ionicons name="image-outline" size={28} color={Colors.muted} />
-                  <Text style={styles.emptyPhotoText}>No profile photo selected yet.</Text>
-                </View>
-              )}
+              <Image source={getProfileImageSource(profileImage)} style={styles.previewImage} />
+              {!hasUploadedProfileImage ? (
+                <Text style={styles.emptyPhotoText}>Default photo will be used until you upload one.</Text>
+              ) : null}
               <Pressable
                 style={styles.photoManageBtn}
                 onPress={() => navigation.navigate('UploadPhotos')}
               >
                 <Text style={styles.photoManageBtnText}>
-                  {profileImage ? 'Change Photo' : 'Add Photo'}
+                  {hasUploadedProfileImage ? 'Change Photo' : 'Add Photo'}
                 </Text>
               </Pressable>
             </View>
@@ -609,17 +607,11 @@ const styles = StyleSheet.create({
     borderRadius: Radii.lg,
     backgroundColor: Colors.chip,
   },
-  emptyPhotoState: {
-    height: 180,
-    borderRadius: Radii.lg,
-    backgroundColor: Colors.chip,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   emptyPhotoText: {
     marginTop: 10,
     color: Colors.muted,
     fontWeight: '600',
+    textAlign: 'center',
   },
   photoManageBtn: {
     marginTop: 12,

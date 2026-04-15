@@ -8,6 +8,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { getReceivedInterests } from '../lib/api';
 import { RowListSkeleton } from '../components/Skeleton';
 import { getReadInterestIds, markInterestNotificationsRead } from '../lib/interestNotifications';
+import { getProfileImageSource, hasProfileImage } from '../lib/profileImage';
 import { Colors, Spacing } from '../theme/theme';
 
 function formatTimeAgo(timestamp) {
@@ -118,20 +119,12 @@ const NotificationsScreen = ({ navigation }) => {
   };
 
   const renderAvatar = (item) => {
-    if (item.avatar) {
-      return (
-        <Image
-          source={{ uri: item.avatar }}
-          style={styles.avatar}
-          blurRadius={item.profile?.photo_blurred ? 16 : 0}
-        />
-      );
-    }
-
     return (
-      <View style={styles.iconAvatar}>
-        <Ionicons name={item.accentIcon || 'heart-outline'} size={22} color={Colors.surface} />
-      </View>
+      <Image
+        source={getProfileImageSource(item.avatar)}
+        style={styles.avatar}
+        blurRadius={item.profile?.photo_blurred && hasProfileImage(item.avatar) ? 16 : 0}
+      />
     );
   };
 

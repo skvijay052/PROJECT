@@ -15,6 +15,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { getChats } from '../lib/api';
 import { RowListSkeleton } from '../components/Skeleton';
+import { getProfileImageSource } from '../lib/profileImage';
 import { Colors, Spacing } from '../theme/theme';
 
 function formatTimeAgo(timestamp) {
@@ -55,7 +56,7 @@ const ChatScreen = ({ navigation }) => {
         ...thread,
         profile: {
           ...(thread?.profile || {}),
-          image: thread?.profile?.image || 'https://via.placeholder.com/600x600',
+          image: thread?.profile?.image || '',
           isOnline: thread?.profile?.isOnline ?? thread?.profile?.is_online ?? false,
         },
         preview: thread?.last_message || 'Start your conversation',
@@ -97,7 +98,7 @@ const ChatScreen = ({ navigation }) => {
       >
         <View style={styles.avatarWrap}>
           <Image
-            source={{ uri: profile.image }}
+            source={getProfileImageSource(profile.image)}
             style={styles.avatar}
             blurRadius={profile.photo_blurred ? 16 : 0}
           />

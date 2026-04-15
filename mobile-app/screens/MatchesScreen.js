@@ -22,6 +22,7 @@ import {
   updateInterestStatus,
 } from '../lib/api';
 import { MatchesFeedSkeleton } from '../components/Skeleton';
+import { getProfileImageSource } from '../lib/profileImage';
 import { Colors, Radii, Shadows, Spacing } from '../theme/theme';
 
 const TABS = [
@@ -69,7 +70,7 @@ function normalizeInterestItem(interest, matchedProfileIds) {
     sentAgo: formatTimeAgo(interest?.updated_at || interest?.created_at),
     profile: {
       ...profile,
-      image: profile?.image || 'https://via.placeholder.com/900x1200',
+      image: profile?.image || '',
       isOnline: profile?.isOnline ?? profile?.is_online ?? false,
     },
   };
@@ -197,7 +198,7 @@ const MatchesScreen = ({ navigation }) => {
     return (
       <View style={styles.card}>
         <ImageBackground
-          source={{ uri: profile.image }}
+          source={getProfileImageSource(profile.image)}
           style={styles.hero}
           imageStyle={styles.heroImage}
           blurRadius={profile.photo_blurred ? 22 : 0}
@@ -337,7 +338,7 @@ const MatchesScreen = ({ navigation }) => {
     return (
       <Pressable style={styles.sentCard} onPress={() => openProfile(item)}>
         <Image
-          source={{ uri: profile.image }}
+          source={getProfileImageSource(profile.image)}
           style={styles.sentAvatar}
           blurRadius={profile.photo_blurred ? 18 : 0}
         />

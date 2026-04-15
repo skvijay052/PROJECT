@@ -16,6 +16,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { getMyProfile, getMyProfileStats } from '../lib/api';
 import { ProfileScreenSkeleton } from '../components/Skeleton';
+import { getProfileImageSource } from '../lib/profileImage';
 import { signOutSupabaseSession } from '../lib/supabase';
 import { Colors, Radii, Shadows, Spacing } from '../theme/theme';
 
@@ -109,7 +110,7 @@ const ProfileScreen = ({ navigation }) => {
 
   const name = profile?.name || 'Complete your profile';
   const about = profile?.bio || 'Add your basic details so your profile is ready for matching.';
-  const photoUri = profile?.image || 'https://via.placeholder.com/160';
+  const photoSource = getProfileImageSource(profile?.image);
   const fullLocation = [profile?.city, profile?.state, profile?.country].filter(Boolean).join(', ');
   const summaryLine = useMemo(() => {
     const parts = [];
@@ -244,7 +245,7 @@ const ProfileScreen = ({ navigation }) => {
             <View style={styles.topRow}>
               <View style={styles.avatarRing}>
                 <Image
-                  source={{ uri: photoUri }}
+                  source={photoSource}
                   style={styles.avatar}
                   blurRadius={profile?.photo_blurred ? 18 : 0}
                 />

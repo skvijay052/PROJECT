@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { getMyShortlists, removeFromShortlist } from '../lib/api';
+import { getProfileImageSource } from '../lib/profileImage';
 import { RowListSkeleton } from '../components/Skeleton';
 import { Colors, Radii, Shadows, Spacing } from '../theme/theme';
 
@@ -75,7 +76,7 @@ const ShortlistScreen = ({ navigation }) => {
       >
         <View style={styles.avatarWrap}>
           <Image
-            source={{ uri: profile.image || 'https://via.placeholder.com/300x300' }}
+            source={getProfileImageSource(profile.image)}
             style={styles.avatar}
             blurRadius={profile.photo_blurred ? 18 : 0}
           />

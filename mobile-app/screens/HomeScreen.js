@@ -27,6 +27,7 @@ import {
   countUnreadInterestNotifications,
   getReadInterestIds,
 } from '../lib/interestNotifications';
+import { getProfileImageSource } from '../lib/profileImage';
 import { Colors, Radii, Shadows, Spacing } from '../theme/theme';
 
 const FILTERS = [
@@ -152,7 +153,7 @@ const HomeScreen = ({ navigation }) => {
       >
         <View style={styles.avatarWrap}>
           <Image
-            source={{ uri: item.image }}
+            source={getProfileImageSource(item.image)}
             style={styles.avatar}
             blurRadius={item.photo_blurred ? 18 : 0}
           />

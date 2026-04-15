@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 
+import { getProfileImageSource } from '../lib/profileImage';
 import { Colors, Radii, Shadows, Spacing } from '../theme/theme';
 
 const BLOCKED = [
@@ -16,7 +17,7 @@ const BLOCKED = [
     city: 'Chennai',
     state: 'Andhra Pradesh',
     country: 'India',
-    image: 'https://via.placeholder.com/120',
+    image: '',
     isOnline: false,
   },
 ];
@@ -31,7 +32,7 @@ const BlockedUsersScreen = () => {
   const renderUser = ({ item }) => (
     <View style={styles.card}>
       <View style={styles.avatarWrap}>
-        <Image source={{ uri: item.image }} style={styles.avatar} />
+        <Image source={getProfileImageSource(item.image)} style={styles.avatar} />
         {item.isOnline && <View style={styles.onlineDot} />}
       </View>
 

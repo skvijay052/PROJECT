@@ -19,6 +19,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { ConversationSkeleton } from '../components/Skeleton';
 import { getChatMessages, sendChatMessage } from '../lib/api';
+import { getProfileImageSource } from '../lib/profileImage';
 import { Colors, Radii, Spacing } from '../theme/theme';
 
 const ChatDetailScreen = ({ navigation, route }) => {
@@ -32,7 +33,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
 
   const [profile, setProfile] = useState({
     name,
-    image: avatar || 'https://via.placeholder.com/600x600',
+    image: avatar || '',
     photo_blurred: photoBlurred,
     isOnline,
   });
@@ -44,10 +45,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
 
   const listRef = useRef(null);
 
-  const otherAvatar = useMemo(
-    () => profile.image || 'https://via.placeholder.com/600x600',
-    [profile.image]
-  );
+  const otherAvatarSource = useMemo(() => getProfileImageSource(profile.image), [profile.image]);
   const statusText = profile.isOnline ? 'Active now' : 'Offline';
   const statusColor = profile.isOnline ? Colors.online : Colors.muted;
   const canSend = input.trim().length > 0 && !isSending;
@@ -135,7 +133,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
         <View style={[styles.msgRow, isMe && styles.msgRowMe]}>
           {!isMe && (
             <Image
-              source={{ uri: otherAvatar }}
+              source={otherAvatarSource}
               style={styles.msgAvatar}
               blurRadius={profile.photo_blurred ? 16 : 0}
             />
@@ -166,7 +164,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
           </Pressable>
 
           <Image
-            source={{ uri: otherAvatar }}
+            source={otherAvatarSource}
             style={styles.headerAvatar}
             blurRadius={profile.photo_blurred ? 16 : 0}
           />
