@@ -119,7 +119,13 @@ const NotificationsScreen = ({ navigation }) => {
 
   const renderAvatar = (item) => {
     if (item.avatar) {
-      return <Image source={{ uri: item.avatar }} style={styles.avatar} />;
+      return (
+        <Image
+          source={{ uri: item.avatar }}
+          style={styles.avatar}
+          blurRadius={item.profile?.photo_blurred ? 16 : 0}
+        />
+      );
     }
 
     return (

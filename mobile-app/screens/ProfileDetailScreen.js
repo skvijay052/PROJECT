@@ -31,6 +31,9 @@ import { Colors, Radii, Shadows, Spacing } from '../theme/theme';
 const FALLBACK_PROFILE = {
   name: 'Profile',
   age: '',
+  marital_status: '',
+  profile_visibility: 'Public',
+  photo_blurred: false,
   height: '',
   title: '',
   profession: '',
@@ -267,6 +270,12 @@ const ProfileDetailScreen = ({ navigation, route }) => {
         value: profile.age ? `${profile.age} years` : '-',
       },
       {
+        key: 'marital_status',
+        icon: 'heart-outline',
+        label: 'Marital Status',
+        value: profile.marital_status || '-',
+      },
+      {
         key: 'height',
         icon: 'resize-outline',
         label: 'Height',
@@ -309,6 +318,12 @@ const ProfileDetailScreen = ({ navigation, route }) => {
         value: districtText || '-',
       },
       {
+        key: 'profile_visibility',
+        icon: 'eye-outline',
+        label: 'Who Can See Photo',
+        value: profile.profile_visibility || 'Public',
+      },
+      {
         key: 'religion',
         icon: 'leaf-outline',
         label: 'Religion',
@@ -322,8 +337,10 @@ const ProfileDetailScreen = ({ navigation, route }) => {
       locationText,
       professionText,
       profile.age,
+      profile.marital_status,
       profile.education,
       profile.height,
+      profile.profile_visibility,
       profile.religion,
       profile.state,
     ]
@@ -440,6 +457,7 @@ const ProfileDetailScreen = ({ navigation, route }) => {
       profileId: targetProfileId,
       name: profile.name,
       avatar: profile.image,
+      photoBlurred: profile.photo_blurred,
       isOnline: profile.isOnline,
     });
   };
@@ -554,7 +572,12 @@ const ProfileDetailScreen = ({ navigation, route }) => {
               onMomentumScrollEnd={handleHeroScrollEnd}
             >
               {photoUrls.map((photoUrl, index) => (
-                <Image key={`${photoUrl}-${index}`} source={{ uri: photoUrl }} style={styles.heroSlide} />
+                <Image
+                  key={`${photoUrl}-${index}`}
+                  source={{ uri: photoUrl }}
+                  style={styles.heroSlide}
+                  blurRadius={profile.photo_blurred ? 24 : 0}
+                />
               ))}
             </ScrollView>
 

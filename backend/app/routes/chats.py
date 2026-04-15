@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from app.core.auth import CurrentUser, get_current_user
 from app.core.config import clamp_list_limit, settings
+from app.core.profile_visibility import annotate_profile_list_photo_visibility
 from app.core.supabase_client import get_response_data, get_supabase_admin_client
 from app.schemas.chat import (
     ChatListResponse,
@@ -147,7 +148,14 @@ def list_chats(
         row["user_two_id"] if row["user_one_id"] == current_user.id else row["user_one_id"]
         for row in match_rows
     ]
-    profile_map = _get_profile_map(counterpart_ids)
+    profile_map = {
+        row["id"]: row
+        for row in annotate_profile_list_photo_visibility(
+            viewer_id=current_user.id,
+            profile_rows=list(_get_profile_map(counterpart_ids).values()),
+            matched_profile_ids=set(counterpart_ids),
+        )
+    }
 
     sent_rows: list[dict[str, Any]] = []
     received_rows: list[dict[str, Any]] = []
@@ -221,7 +229,14 @@ def list_chat_messages(
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
 ) -> ChatMessagesResponse:
     _ensure_matched(current_user.id, profile_id)
-    profile_map = _get_profile_map([profile_id])
+    profile_map = {
+        row["id"]: row
+        for row in annotate_profile_list_photo_visibility(
+            viewer_id=current_user.id,
+            profile_rows=list(_get_profile_map([profile_id]).values()),
+            matched_profile_ids={profile_id},
+        )
+    }
     profile_row = profile_map.get(profile_id)
     if profile_row is None:
         raise HTTPException(

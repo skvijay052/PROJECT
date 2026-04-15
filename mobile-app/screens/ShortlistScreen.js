@@ -77,6 +77,7 @@ const ShortlistScreen = ({ navigation }) => {
           <Image
             source={{ uri: profile.image || 'https://via.placeholder.com/300x300' }}
             style={styles.avatar}
+            blurRadius={profile.photo_blurred ? 18 : 0}
           />
           {(profile.isOnline ?? profile.is_online) && <View style={styles.onlineDot} />}
         </View>

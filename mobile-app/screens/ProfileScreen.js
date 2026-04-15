@@ -114,6 +114,7 @@ const ProfileScreen = ({ navigation }) => {
   const summaryLine = useMemo(() => {
     const parts = [];
     if (profile?.age) parts.push(`${profile.age} yrs`);
+    if (profile?.marital_status) parts.push(profile.marital_status);
     if (profile?.title) parts.push(profile.title);
     const location = [profile?.city, profile?.state].filter(Boolean).join(', ');
     if (location) parts.push(location);
@@ -134,6 +135,12 @@ const ProfileScreen = ({ navigation }) => {
       icon: 'person-outline',
       label: 'Age',
       value: profile?.age ? `${profile.age} years` : '-',
+    },
+    {
+      key: 'marital_status',
+      icon: 'heart-outline',
+      label: 'Marital Status',
+      value: profile?.marital_status || '-',
     },
     {
       key: 'height',
@@ -170,6 +177,12 @@ const ProfileScreen = ({ navigation }) => {
       icon: 'layers-outline',
       label: 'Caste',
       value: profile?.caste || '-',
+    },
+    {
+      key: 'profile_visibility',
+      icon: 'eye-outline',
+      label: 'Who Can See Photo',
+      value: profile?.profile_visibility || 'Public',
     },
     {
       key: 'phone',
@@ -230,7 +243,11 @@ const ProfileScreen = ({ navigation }) => {
           <View style={styles.card}>
             <View style={styles.topRow}>
               <View style={styles.avatarRing}>
-                <Image source={{ uri: photoUri }} style={styles.avatar} />
+                <Image
+                  source={{ uri: photoUri }}
+                  style={styles.avatar}
+                  blurRadius={profile?.photo_blurred ? 18 : 0}
+                />
               </View>
 
               <View style={styles.statsRow}>

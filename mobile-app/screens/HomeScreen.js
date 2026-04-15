@@ -151,7 +151,11 @@ const HomeScreen = ({ navigation }) => {
         onPress={() => navigation.navigate('ProfileDetail', { profile: item })}
       >
         <View style={styles.avatarWrap}>
-          <Image source={{ uri: item.image }} style={styles.avatar} />
+          <Image
+            source={{ uri: item.image }}
+            style={styles.avatar}
+            blurRadius={item.photo_blurred ? 18 : 0}
+          />
           {item.isOnline && <View style={styles.onlineDot} />}
         </View>
 

@@ -22,6 +22,8 @@ import { getMyProfile, upsertMyProfile } from '../lib/api';
 import {
   COUNTRY_OPTIONS,
   EDUCATION_OPTIONS,
+  MARITAL_STATUS_OPTIONS,
+  PROFILE_VISIBILITY_OPTIONS,
   PROFESSION_OPTIONS,
   RELIGION_OPTIONS,
   getCasteOptions,
@@ -36,6 +38,8 @@ const EditProfileScreen = ({ navigation, route }) => {
   const syncMessage = route?.params?.syncMessage || '';
   const scrollViewRef = useRef(null);
   const [age, setAge] = useState('');
+  const [maritalStatus, setMaritalStatus] = useState('');
+  const [profileVisibility, setProfileVisibility] = useState('Public');
   const [height, setHeight] = useState('');
   const [religion, setReligion] = useState('');
   const [education, setEducation] = useState('');
@@ -54,6 +58,8 @@ const EditProfileScreen = ({ navigation, route }) => {
       setIsLoading(true);
       const profile = await getMyProfile();
       setAge(profile?.age ? String(profile.age) : '');
+      setMaritalStatus(profile?.marital_status || '');
+      setProfileVisibility(profile?.profile_visibility || 'Public');
       setHeight(profile?.height || '');
       setReligion(profile?.religion || '');
       setEducation(profile?.education || '');
@@ -80,6 +86,14 @@ const EditProfileScreen = ({ navigation, route }) => {
   const educationOptions = useMemo(
     () => withSelectedOption(EDUCATION_OPTIONS, education),
     [education]
+  );
+  const maritalStatusOptions = useMemo(
+    () => withSelectedOption(MARITAL_STATUS_OPTIONS, maritalStatus),
+    [maritalStatus]
+  );
+  const profileVisibilityOptions = useMemo(
+    () => withSelectedOption(PROFILE_VISIBILITY_OPTIONS, profileVisibility),
+    [profileVisibility]
   );
   const professionOptions = useMemo(
     () => withSelectedOption(PROFESSION_OPTIONS, profession),
@@ -157,6 +171,8 @@ const EditProfileScreen = ({ navigation, route }) => {
 
   const canSave = useMemo(() => (
     age.trim().length > 0 ||
+    maritalStatus.trim().length > 0 ||
+    profileVisibility.trim().length > 0 ||
     height.trim().length > 0 ||
     religion.trim().length > 0 ||
     education.trim().length > 0 ||
@@ -166,7 +182,7 @@ const EditProfileScreen = ({ navigation, route }) => {
     stateName.trim().length > 0 ||
     country.trim().length > 0 ||
     bio.trim().length > 0
-  ), [age, height, religion, education, profession, caste, city, stateName, country, bio]);
+  ), [age, maritalStatus, profileVisibility, height, religion, education, profession, caste, city, stateName, country, bio]);
 
   const handleSave = async () => {
     if (isSaving || !canSave) return;
@@ -182,6 +198,8 @@ const EditProfileScreen = ({ navigation, route }) => {
       setIsSaving(true);
       await upsertMyProfile({
         age: parsedAge,
+        marital_status: maritalStatus.trim() || null,
+        profile_visibility: profileVisibility.trim() || 'Public',
         height: height.trim() || null,
         religion: religion.trim() || null,
         education: education.trim() || null,
@@ -240,7 +258,7 @@ const EditProfileScreen = ({ navigation, route }) => {
             ) : null}
 
             {isLoading ? (
-              <FormScreenSkeleton fields={9} showPhoto />
+              <FormScreenSkeleton fields={11} showPhoto />
             ) : (
               <>
 
@@ -257,6 +275,24 @@ const EditProfileScreen = ({ navigation, route }) => {
                 maxLength={2}
               />
             </View>
+
+            <SelectField
+              iconName="heart-outline"
+              title="Select Marital Status"
+              placeholder="Marital Status"
+              value={maritalStatus}
+              options={maritalStatusOptions}
+              onSelect={setMaritalStatus}
+            />
+
+            <SelectField
+              iconName="eye-outline"
+              title="Who Can See Profile Photo?"
+              placeholder="Profile Photo Visibility"
+              value={profileVisibility}
+              options={profileVisibilityOptions}
+              onSelect={setProfileVisibility}
+            />
 
             <View style={styles.inputWrap}>
               <Ionicons name="resize-outline" size={18} color={Colors.muted} style={styles.inputLeftIcon} />

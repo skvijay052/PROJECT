@@ -2,6 +2,11 @@ from datetime import datetime
 
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from app.core.profile_visibility import (
+    PUBLIC_PROFILE_VISIBILITY,
+    normalize_profile_visibility_label,
+)
+
 
 def _strip_string(value: str | None) -> str | None:
     if value is None:
@@ -26,6 +31,23 @@ def _normalize_gender_label(value: str | None) -> str | None:
     return aliases.get(cleaned.lower(), cleaned.lower())
 
 
+def _normalize_marital_status_label(value: str | None) -> str | None:
+    cleaned = _strip_string(value)
+    if cleaned is None:
+        return None
+
+    aliases = {
+        "single": "Unmarried",
+        "unmarried": "Unmarried",
+        "never married": "Unmarried",
+        "married": "Married",
+        "divorced": "Divorced",
+        "widowed": "Widowed",
+        "separated": "Separated",
+    }
+    return aliases.get(cleaned.lower(), cleaned.title())
+
+
 class ProfileBase(BaseModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
 
@@ -37,6 +59,8 @@ class ProfileBase(BaseModel):
     )
     phone: str | None = Field(default=None, max_length=30)
     gender: str | None = Field(default=None, max_length=20)
+    profile_visibility: str | None = Field(default=PUBLIC_PROFILE_VISIBILITY, max_length=40)
+    marital_status: str | None = Field(default=None, max_length=40)
     age: int | None = Field(default=None, ge=18, le=99)
     height: str | None = Field(default=None, max_length=30)
     religion: str | None = Field(default=None, max_length=80)
@@ -54,6 +78,8 @@ class ProfileBase(BaseModel):
         "name",
         "phone",
         "gender",
+        "profile_visibility",
+        "marital_status",
         "height",
         "religion",
         "education",
@@ -74,6 +100,16 @@ class ProfileBase(BaseModel):
     @classmethod
     def normalize_gender(cls, value: str | None) -> str | None:
         return _normalize_gender_label(value)
+
+    @field_validator("profile_visibility", mode="after")
+    @classmethod
+    def normalize_profile_visibility(cls, value: str | None) -> str:
+        return normalize_profile_visibility_label(value)
+
+    @field_validator("marital_status", mode="after")
+    @classmethod
+    def normalize_marital_status(cls, value: str | None) -> str | None:
+        return _normalize_marital_status_label(value)
 
 
 class ProfileUpsert(ProfileBase):
@@ -125,7 +161,11 @@ class ProfileSummary(BaseModel):
 
     id: str
     name: str | None = Field(default=None, validation_alias=AliasChoices("name", "full_name"))
+    gender: str | None = None
+    profile_visibility: str | None = PUBLIC_PROFILE_VISIBILITY
+    photo_blurred: bool = False
     age: int | None = None
+    marital_status: str | None = None
     height: str | None = None
     title: str | None = None
     city: str | None = None
@@ -134,6 +174,11 @@ class ProfileSummary(BaseModel):
     bio: str | None = None
     image: str | None = None
     is_online: bool = False
+
+    @field_validator("profile_visibility", mode="after")
+    @classmethod
+    def normalize_profile_visibility(cls, value: str | None) -> str:
+        return normalize_profile_visibility_label(value)
 
 
 class ProfileDetail(ProfileSummary):

@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, Query
 
 from app.core.auth import CurrentUser, get_current_user
 from app.core.config import clamp_list_limit, settings
+from app.core.profile_visibility import annotate_profile_list_photo_visibility
 from app.core.supabase_client import get_response_data, get_supabase_admin_client
 from app.schemas.match import MatchListResponse, MatchOut
 from app.schemas.profile import ProfileSummary
@@ -49,7 +50,14 @@ def list_matches(
         row["user_two_id"] if row["user_one_id"] == current_user.id else row["user_one_id"]
         for row in rows
     ]
-    profile_map = _get_profile_map(counterpart_ids)
+    profile_map = {
+        row["id"]: row
+        for row in annotate_profile_list_photo_visibility(
+            viewer_id=current_user.id,
+            profile_rows=list(_get_profile_map(counterpart_ids).values()),
+            matched_profile_ids=set(counterpart_ids),
+        )
+    }
 
     items = []
     for row in rows:

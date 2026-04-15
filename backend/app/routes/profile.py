@@ -5,6 +5,12 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from app.core.auth import CurrentUser, get_current_user
 from app.core.config import clamp_list_limit, settings
+from app.core.profile_visibility import (
+    PUBLIC_PROFILE_VISIBILITY,
+    annotate_profile_list_photo_visibility,
+    annotate_profile_photo_visibility,
+    normalize_profile_visibility_label,
+)
 from app.core.supabase_client import get_response_data, get_supabase_admin_client
 from app.schemas.profile import (
     ProfileDetail,
@@ -38,6 +44,10 @@ def _normalize_profile(row: dict[str, Any]) -> dict[str, Any]:
             normalized["name"] = normalized.get("full_name")
 
     normalized["is_online"] = bool(normalized.get("is_online", False))
+    normalized["profile_visibility"] = normalize_profile_visibility_label(
+        normalized.get("profile_visibility")
+    )
+    normalized["photo_blurred"] = False
     return normalized
 
 
@@ -161,6 +171,9 @@ def _apply_missing_identity_defaults(
         resolved_gender = _guess_default_gender(current_user)
         if resolved_gender:
             update_data["gender"] = resolved_gender
+
+    if not update_data.get("profile_visibility") and not existing_profile.get("profile_visibility"):
+        update_data["profile_visibility"] = PUBLIC_PROFILE_VISIBILITY
 
 
 def _build_profile_query(
@@ -391,6 +404,7 @@ def discover_profiles(
             row for row in rows if _normalize_gender_value(row.get("gender")) == discover_gender
         ]
 
+    rows = annotate_profile_list_photo_visibility(viewer_id=current_user.id, profile_rows=rows)
     rows = rows[:limit]
     return ProfileListResponse(count=len(rows), items=[ProfileSummary(**row) for row in rows])
 
@@ -444,6 +458,7 @@ def search_profiles(
             row for row in rows if _normalize_gender_value(row.get("gender")) == discover_gender
         ]
 
+    rows = annotate_profile_list_photo_visibility(viewer_id=current_user.id, profile_rows=rows)
     rows = rows[:limit]
     return ProfileListResponse(count=len(rows), items=[ProfileSummary(**row) for row in rows])
 
@@ -453,12 +468,10 @@ def get_profile_by_id(
     profile_id: str,
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
 ) -> dict[str, Any]:
-    del current_user
-
     profile = _get_profile_by_id(profile_id)
     if profile is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Profile not found.",
         )
-    return profile
+    return annotate_profile_photo_visibility(viewer_id=current_user.id, profile_row=profile) or profile

@@ -200,6 +200,7 @@ const MatchesScreen = ({ navigation }) => {
           source={{ uri: profile.image }}
           style={styles.hero}
           imageStyle={styles.heroImage}
+          blurRadius={profile.photo_blurred ? 22 : 0}
         >
           <View style={styles.heroOverlay} />
 
@@ -335,7 +336,11 @@ const MatchesScreen = ({ navigation }) => {
 
     return (
       <Pressable style={styles.sentCard} onPress={() => openProfile(item)}>
-        <Image source={{ uri: profile.image }} style={styles.sentAvatar} />
+        <Image
+          source={{ uri: profile.image }}
+          style={styles.sentAvatar}
+          blurRadius={profile.photo_blurred ? 18 : 0}
+        />
 
         <View style={styles.sentBody}>
           <View style={styles.sentTopRow}>

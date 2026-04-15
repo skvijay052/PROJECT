@@ -26,12 +26,14 @@ const ChatDetailScreen = ({ navigation, route }) => {
     profileId,
     name = 'Chat',
     avatar,
+    photoBlurred = false,
     isOnline = false,
   } = route?.params ?? {};
 
   const [profile, setProfile] = useState({
     name,
     image: avatar || 'https://via.placeholder.com/600x600',
+    photo_blurred: photoBlurred,
     isOnline,
   });
   const [messages, setMessages] = useState([]);
@@ -73,6 +75,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
         ...nextProfile,
         name: nextProfile?.name || prev.name,
         image: nextProfile?.image || prev.image,
+        photo_blurred: nextProfile?.photo_blurred ?? prev.photo_blurred,
         isOnline: nextProfile?.isOnline ?? nextProfile?.is_online ?? prev.isOnline,
       }));
       setMessages(response?.items || []);
@@ -130,7 +133,13 @@ const ChatDetailScreen = ({ navigation, route }) => {
     return (
       <View style={styles.msgBlock}>
         <View style={[styles.msgRow, isMe && styles.msgRowMe]}>
-          {!isMe && <Image source={{ uri: otherAvatar }} style={styles.msgAvatar} />}
+          {!isMe && (
+            <Image
+              source={{ uri: otherAvatar }}
+              style={styles.msgAvatar}
+              blurRadius={profile.photo_blurred ? 16 : 0}
+            />
+          )}
           <View style={[styles.bubble, isMe ? styles.bubbleMe : styles.bubbleOther]}>
             <Text style={styles.msgText}>{item.text}</Text>
           </View>
@@ -156,7 +165,11 @@ const ChatDetailScreen = ({ navigation, route }) => {
             <Ionicons name="arrow-back" size={24} color={Colors.text} />
           </Pressable>
 
-          <Image source={{ uri: otherAvatar }} style={styles.headerAvatar} />
+          <Image
+            source={{ uri: otherAvatar }}
+            style={styles.headerAvatar}
+            blurRadius={profile.photo_blurred ? 16 : 0}
+          />
 
           <View style={styles.headerTitleWrap}>
             <Text style={styles.headerName} numberOfLines={1}>

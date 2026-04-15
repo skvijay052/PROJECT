@@ -13,6 +13,20 @@ export const RELIGION_OPTIONS = [
   'Other',
 ];
 
+export const MARITAL_STATUS_OPTIONS = [
+  'Unmarried',
+  'Married',
+  'Divorced',
+  'Widowed',
+  'Separated',
+];
+
+export const PROFILE_VISIBILITY_OPTIONS = [
+  'Public',
+  'Matches Only',
+  'Hide From Everyone',
+];
+
 const CASTE_OPTIONS_BY_RELIGION = {
   Hindu: [
     'Brahmin',

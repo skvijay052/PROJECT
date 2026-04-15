@@ -5,6 +5,10 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from app.core.auth import CurrentUser, get_current_user
 from app.core.config import clamp_list_limit, settings
+from app.core.profile_visibility import (
+    annotate_profile_list_photo_visibility,
+    annotate_profile_photo_visibility,
+)
 from app.core.supabase_client import get_response_data, get_supabase_admin_client
 from app.schemas.interest import (
     InterestCreate,
@@ -146,6 +150,10 @@ def send_interest(
         interest_row = _get_interest_by_id(interest_row["id"]) if interest_row.get("id") else None
         interest_row = interest_row or {**interest_payload, "status": "matched"}
 
+    receiver_profile = annotate_profile_photo_visibility(
+        viewer_id=current_user.id,
+        profile_row=receiver_profile,
+    )
     return InterestMutationResult(
         interest=_format_interest(interest_row, direction="sent", profile_row=receiver_profile),
         match=_format_match(match_row, receiver_profile),
@@ -169,7 +177,13 @@ def list_received_interests(
         .execute()
     )
     rows = get_response_data(response) or []
-    profile_map = _get_profile_map([row["sender_id"] for row in rows])
+    profile_map = {
+        row["id"]: row
+        for row in annotate_profile_list_photo_visibility(
+            viewer_id=current_user.id,
+            profile_rows=list(_get_profile_map([row["sender_id"] for row in rows]).values()),
+        )
+    }
     items = [
         _format_interest(row, direction="received", profile_row=profile_map.get(row["sender_id"]))
         for row in rows
@@ -193,7 +207,13 @@ def list_sent_interests(
         .execute()
     )
     rows = get_response_data(response) or []
-    profile_map = _get_profile_map([row["receiver_id"] for row in rows])
+    profile_map = {
+        row["id"]: row
+        for row in annotate_profile_list_photo_visibility(
+            viewer_id=current_user.id,
+            profile_rows=list(_get_profile_map([row["receiver_id"] for row in rows]).values()),
+        )
+    }
     items = [
         _format_interest(row, direction="sent", profile_row=profile_map.get(row["receiver_id"]))
         for row in rows
@@ -231,6 +251,10 @@ def update_interest_status(
 
     counterpart_id = interest_row["sender_id"] if is_receiver else interest_row["receiver_id"]
     counterpart_profile = _get_profile_by_id(counterpart_id)
+    counterpart_profile = annotate_profile_photo_visibility(
+        viewer_id=current_user.id,
+        profile_row=counterpart_profile,
+    )
     match_row = None
 
     if payload.status == "accepted":

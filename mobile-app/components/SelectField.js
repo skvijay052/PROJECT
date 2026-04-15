@@ -202,7 +202,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(17, 17, 17, 0.28)',
   },
   sheet: {
-    maxHeight: '72%',
+    maxHeight: '80%',
+    minHeight: 350,
     backgroundColor: Colors.surface,
     borderTopLeftRadius: Radii.xl,
     borderTopRightRadius: Radii.xl,

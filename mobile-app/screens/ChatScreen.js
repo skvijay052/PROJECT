@@ -90,12 +90,17 @@ const ChatScreen = ({ navigation }) => {
             profileId: profile.id,
             name: profile.name,
             avatar: profile.image,
+            photoBlurred: profile.photo_blurred,
             isOnline: profile.isOnline,
           })
         }
       >
         <View style={styles.avatarWrap}>
-          <Image source={{ uri: profile.image }} style={styles.avatar} />
+          <Image
+            source={{ uri: profile.image }}
+            style={styles.avatar}
+            blurRadius={profile.photo_blurred ? 16 : 0}
+          />
           {profile.isOnline && <View style={styles.onlineDot} />}
         </View>
 
