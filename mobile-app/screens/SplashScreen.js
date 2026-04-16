@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 
 import { getSupabaseSession, isSupabaseConfigured } from '../lib/supabase';
+import { Colors } from '../theme/theme';
 
 const SplashScreen = ({ navigation }) => {
   const logoScale = useRef(new Animated.Value(0.7)).current;
@@ -127,7 +128,7 @@ const SplashScreen = ({ navigation }) => {
 
       <Animated.View style={[styles.logoCircle, { transform: [{ scale: logoScale }] }]}>
         <Animated.Text style={[styles.heart, { transform: [{ scale: heartScale }] }]}>
-          ❤
+          {'\u2665'}
         </Animated.Text>
       </Animated.View>
 
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fde7ef',
+    backgroundColor: 'transparent',
     overflow: 'hidden',
   },
   blobOne: {
@@ -160,20 +161,18 @@ const styles = StyleSheet.create({
     width: 260,
     height: 260,
     borderRadius: 130,
-    backgroundColor: '#f7c7d6',
+    backgroundColor: 'rgba(170, 236, 234, 0.6)',
     top: -60,
     left: -80,
-    opacity: 0.6,
   },
   blobTwo: {
     position: 'absolute',
     width: 220,
     height: 220,
     borderRadius: 110,
-    backgroundColor: '#f3b4c9',
+    backgroundColor: 'rgba(220, 208, 255, 0.64)',
     bottom: -40,
     right: -60,
-    opacity: 0.5,
   },
   ring: {
     position: 'absolute',
@@ -181,36 +180,36 @@ const styles = StyleSheet.create({
     height: 180,
     borderRadius: 90,
     borderWidth: 2,
-    borderColor: '#ffffff',
+    borderColor: 'rgba(255, 255, 255, 0.94)',
   },
   logoCircle: {
     width: 140,
     height: 140,
     borderRadius: 70,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'rgba(255, 255, 255, 0.94)',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#c26b86',
-    shadowOpacity: 0.25,
+    shadowColor: '#A28CCF',
+    shadowOpacity: 0.18,
     shadowRadius: 18,
     shadowOffset: { width: 0, height: 10 },
     elevation: 8,
   },
   heart: {
     fontSize: 56,
-    color: '#e6396f',
+    color: Colors.accent,
   },
   brand: {
     marginTop: 18,
     fontSize: 32,
-    color: '#8b274a',
+    color: Colors.text,
     fontWeight: '700',
     letterSpacing: 0.6,
   },
   tagline: {
     marginTop: 6,
     fontSize: 14,
-    color: '#8b274a',
+    color: Colors.muted,
     opacity: 0.8,
   },
 });
