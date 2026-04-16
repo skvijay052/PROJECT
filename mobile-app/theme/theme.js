@@ -4,6 +4,7 @@ export const Colors = {
   bg: 'transparent',
   backdrop: '#EAF6F8',
   surface: '#FFFFFF',
+  skeletonBgColor: '#fffdfd',
   chip: 'rgba(255, 255, 255, 0.82)',
   skeleton: 'rgba(255, 255, 255, 0.54)',
   skeletonGlow: 'rgba(255, 255, 255, 0.84)',

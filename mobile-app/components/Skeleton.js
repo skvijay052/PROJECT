@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.skeleton,
   },
   card: {
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.skeletonBgColor,
     borderRadius: Radii.xl,
     padding: Spacing.lg,
     marginBottom: Spacing.lg,
