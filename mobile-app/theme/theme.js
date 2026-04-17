@@ -2,12 +2,13 @@ import { Platform } from 'react-native';
 
 export const Colors = {
   bg: 'transparent',
-  backdrop: '#EAF6F8',
+  backdrop: '#F7FCFD',
+  chatPageBg: 'transparent',
   surface: '#FFFFFF',
-  skeletonBgColor: '#fffdfd',
+  skeletonBgColor: '#FFFFFF',
   chip: 'rgba(255, 255, 255, 0.82)',
-  skeleton: 'rgba(255, 255, 255, 0.54)',
-  skeletonGlow: 'rgba(255, 255, 255, 0.84)',
+  skeleton: '#F4F7FB',
+  skeletonGlow: '#FBFDFF',
   text: '#111114',
   muted: '#666A76',
   border: 'rgba(147, 151, 181, 0.22)',

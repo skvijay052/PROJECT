@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "PROJECT",
-    "slug": "PROJECT",
+    "slug": "bandhaana",
+    "owner": "vijay0511197s-organization",
     "scheme": "bandhanaa",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -28,7 +29,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "5f869e27-b0f2-4916-8e3c-dca154928578"
+        "projectId": "b93264ba-04ed-498a-8c8a-1189bc03cafc"
       }
     }
   }

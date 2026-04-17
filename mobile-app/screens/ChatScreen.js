@@ -174,11 +174,11 @@ const ChatScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: Colors.bg,
+    backgroundColor: Colors.chatPageBg,
   },
   container: {
     flex: 1,
-    backgroundColor: Colors.bg,
+    backgroundColor: Colors.chatPageBg,
   },
   header: {
     paddingHorizontal: Spacing.lg,

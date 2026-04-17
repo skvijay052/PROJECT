@@ -7,6 +7,8 @@ const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL?.trim();
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY?.trim();
 export const authRedirectUrl =
   process.env.EXPO_PUBLIC_AUTH_REDIRECT_URL?.trim() || 'bandhanaa://auth/callback';
+export const SUPABASE_CONFIG_ERROR_MESSAGE =
+  'Missing EXPO_PUBLIC_SUPABASE_URL or EXPO_PUBLIC_SUPABASE_ANON_KEY. Set them in mobile-app/.env for local development or in EAS environment variables for cloud builds.';
 
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 const AUTH_STORAGE_KEY = 'bandhanaa-auth';
@@ -97,9 +99,7 @@ async function syncAutoRefresh(client) {
 
 export function getSupabaseClient() {
   if (!isSupabaseConfigured) {
-    throw new Error(
-      'Missing EXPO_PUBLIC_SUPABASE_URL or EXPO_PUBLIC_SUPABASE_ANON_KEY. Set them in mobile-app/.env for local development or in EAS environment variables for cloud builds.'
-    );
+    throw new Error(SUPABASE_CONFIG_ERROR_MESSAGE);
   }
 
   if (!supabaseClient) {

@@ -15,7 +15,12 @@ import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 
 import { syncAuthenticatedProfile } from '../lib/api';
-import { authRedirectUrl, getSupabaseClient } from '../lib/supabase';
+import {
+  authRedirectUrl,
+  getSupabaseClient,
+  isSupabaseConfigured,
+  SUPABASE_CONFIG_ERROR_MESSAGE,
+} from '../lib/supabase';
 import { Colors, Radii, Shadows, Spacing } from '../theme/theme';
 
 const RegisterScreen = ({ navigation }) => {
@@ -40,6 +45,7 @@ const RegisterScreen = ({ navigation }) => {
     if (!password.trim() || !confirmPassword.trim()) return false;
     return password === confirmPassword;
   }, [name, email, phone, gender, password, confirmPassword]);
+  const isAuthReady = isSupabaseConfigured;
 
   const scrollToFocusedInput = useCallback((target) => {
     if (!target || !scrollViewRef.current) {
@@ -53,6 +59,11 @@ const RegisterScreen = ({ navigation }) => {
 
   const handleRegister = async () => {
     if (!canSubmit || isSubmitting) return;
+
+    if (!isAuthReady) {
+      Alert.alert('Setup required', SUPABASE_CONFIG_ERROR_MESSAGE);
+      return;
+    }
 
     try {
       setIsSubmitting(true);
@@ -143,6 +154,16 @@ const RegisterScreen = ({ navigation }) => {
           </View>
 
           <View style={styles.form}>
+            {!isAuthReady && (
+              <View style={styles.noticeCard}>
+                <Ionicons name="cloud-offline-outline" size={18} color={Colors.accent} />
+                <Text style={styles.noticeText}>
+                  This build is missing the Supabase environment variables. Add them in EAS and
+                  rebuild before creating accounts.
+                </Text>
+              </View>
+            )}
+
             <Text style={styles.label}>Full Name *</Text>
             <View style={styles.inputWrap}>
               <Ionicons name="person-outline" size={18} color={Colors.muted} style={styles.inputLeftIcon} />
@@ -272,11 +293,19 @@ const RegisterScreen = ({ navigation }) => {
             )}
 
             <Pressable
-              style={[styles.primaryBtn, canSubmit && !isSubmitting && styles.primaryBtnActive]}
+              style={[
+                styles.primaryBtn,
+                canSubmit && !isSubmitting && isAuthReady && styles.primaryBtnActive,
+              ]}
               onPress={handleRegister}
-              disabled={!canSubmit || isSubmitting}
+              disabled={!canSubmit || isSubmitting || !isAuthReady}
             >
-              <Text style={[styles.primaryBtnText, canSubmit && !isSubmitting && styles.primaryBtnTextActive]}>
+              <Text
+                style={[
+                  styles.primaryBtnText,
+                  canSubmit && !isSubmitting && isAuthReady && styles.primaryBtnTextActive,
+                ]}
+              >
                 {isSubmitting ? 'Creating Account...' : 'Create Account'}
               </Text>
             </Pressable>
@@ -337,6 +366,25 @@ const styles = StyleSheet.create({
   },
   form: {
     marginTop: Spacing.lg,
+  },
+  noticeCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderRadius: Radii.lg,
+    backgroundColor: 'rgba(160, 45, 255, 0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(160, 45, 255, 0.16)',
+    marginBottom: 18,
+  },
+  noticeText: {
+    flex: 1,
+    marginLeft: 10,
+    color: Colors.text,
+    fontSize: 13,
+    lineHeight: 19,
+    fontWeight: '600',
   },
   label: {
     fontSize: 14,

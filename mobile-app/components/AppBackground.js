@@ -31,14 +31,14 @@ const styles = StyleSheet.create({
     height: 420,
     top: -110,
     left: -150,
-    backgroundColor: 'rgba(165, 236, 233, 0.74)',
+    backgroundColor: 'rgba(165, 236, 233, 0.68)',
   },
   orbLavenderRight: {
     width: 430,
     height: 430,
     top: 40,
     right: -180,
-    backgroundColor: 'rgba(216, 206, 255, 0.72)',
+    backgroundColor: 'rgba(216, 206, 255, 0.68)',
   },
   orbButterCenter: {
     width: 320,
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
   haze: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
   },
 });
 

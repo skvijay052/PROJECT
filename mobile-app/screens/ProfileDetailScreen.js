@@ -360,13 +360,8 @@ const ProfileDetailScreen = ({ navigation, route }) => {
         label: 'Height',
         value: profile.height || '-',
       },
-      {
-        key: 'visibility',
-        label: 'Photos',
-        value: profile.profile_visibility || 'Public',
-      },
     ],
-    [profile.age, profile.height, profile.profile_visibility]
+    [profile.age, profile.height]
   );
 
   const highlightTags = useMemo(

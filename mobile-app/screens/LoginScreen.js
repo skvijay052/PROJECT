@@ -15,7 +15,11 @@ import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 
 import { syncAuthenticatedProfile } from '../lib/api';
-import { getSupabaseClient } from '../lib/supabase';
+import {
+  getSupabaseClient,
+  isSupabaseConfigured,
+  SUPABASE_CONFIG_ERROR_MESSAGE,
+} from '../lib/supabase';
 import { Colors, Radii, Shadows, Spacing } from '../theme/theme';
 
 const LoginScreen = ({ navigation }) => {
@@ -36,6 +40,7 @@ const LoginScreen = ({ navigation }) => {
     if (method === 'email') return email.trim().length > 0 && password.trim().length > 0;
     return phone.trim().length > 0 && otp.trim().length > 0;
   }, [email, password, phone, otp, method]);
+  const isAuthReady = isSupabaseConfigured;
 
   const scrollToFocusedInput = useCallback((target) => {
     if (!target || !scrollViewRef.current) {
@@ -49,6 +54,11 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     if (!canSubmit || isSubmitting) return;
+
+    if (!isAuthReady) {
+      Alert.alert('Setup required', SUPABASE_CONFIG_ERROR_MESSAGE);
+      return;
+    }
 
     if (method !== 'email') {
       Alert.alert('Not ready yet', 'Phone OTP login is not wired yet. Please use email login.');
@@ -133,6 +143,16 @@ const LoginScreen = ({ navigation }) => {
           </View> */}
 
           <View style={styles.form}>
+            {!isAuthReady && (
+              <View style={styles.noticeCard}>
+                <Ionicons name="cloud-offline-outline" size={18} color={Colors.accent} />
+                <Text style={styles.noticeText}>
+                  This build is missing the Supabase environment variables. Add them in EAS and
+                  rebuild before using login.
+                </Text>
+              </View>
+            )}
+
             {method === 'email' ? (
               <>
                 <View style={styles.inputWrap}>
@@ -218,11 +238,19 @@ const LoginScreen = ({ navigation }) => {
             )}
 
             <Pressable
-              style={[styles.primaryBtn, canSubmit && !isSubmitting && styles.primaryBtnActive]}
+              style={[
+                styles.primaryBtn,
+                canSubmit && !isSubmitting && isAuthReady && styles.primaryBtnActive,
+              ]}
               onPress={handleLogin}
-              disabled={!canSubmit || isSubmitting}
+              disabled={!canSubmit || isSubmitting || !isAuthReady}
             >
-              <Text style={[styles.primaryBtnText, canSubmit && !isSubmitting && styles.primaryBtnTextActive]}>
+              <Text
+                style={[
+                  styles.primaryBtnText,
+                  canSubmit && !isSubmitting && isAuthReady && styles.primaryBtnTextActive,
+                ]}
+              >
                 {isSubmitting ? 'Signing In...' : buttonLabel}
               </Text>
             </Pressable>
@@ -320,6 +348,25 @@ const styles = StyleSheet.create({
   },
   form: {
     marginTop: Spacing.xl,
+  },
+  noticeCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderRadius: Radii.lg,
+    backgroundColor: 'rgba(160, 45, 255, 0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(160, 45, 255, 0.16)',
+    marginBottom: 18,
+  },
+  noticeText: {
+    flex: 1,
+    marginLeft: 10,
+    color: Colors.text,
+    fontSize: 13,
+    lineHeight: 19,
+    fontWeight: '600',
   },
   inputWrap: {
     height: 62,
