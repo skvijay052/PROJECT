@@ -62,13 +62,16 @@ const designNotes = [
 function DownloadButton({ href, title, meta, platform, variant = 'primary' }) {
   const isActive = Boolean(href);
   const resolvedHref = isActive ? href : '#download';
+  const isLocalAsset = resolvedHref.startsWith('/');
+  const shouldDownload = isActive && platform === 'APK' && isLocalAsset;
 
   return (
     <a
       className={`store-button store-button--${variant} ${!isActive ? 'is-disabled' : ''}`.trim()}
       href={resolvedHref}
-      target={isActive ? '_blank' : undefined}
-      rel={isActive ? 'noreferrer' : undefined}
+      target={isActive && !shouldDownload ? '_blank' : undefined}
+      rel={isActive && !shouldDownload ? 'noreferrer' : undefined}
+      download={shouldDownload ? true : undefined}
       aria-disabled={!isActive}
     >
       <span className={`store-button__badge store-button__badge--${platform}`}>{platform}</span>
