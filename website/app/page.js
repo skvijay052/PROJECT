@@ -5,7 +5,7 @@ import Reveal from '../components/reveal';
 import SiteHeader from '../components/site-header';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bandhanaa.vercel.app';
-const androidDownloadUrl = process.env.NEXT_PUBLIC_ANDROID_APP_URL || '';
+const androidDownloadUrl = process.env.NEXT_PUBLIC_ANDROID_APP_URL || '/download/bandhanaa.apk';
 const iosDownloadUrl = process.env.NEXT_PUBLIC_IOS_APP_URL || '';
 const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'hello@bandhanaa.com';
 
