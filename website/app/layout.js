@@ -1,4 +1,5 @@
 import './globals.css';
+import { Analytics } from '@vercel/analytics/next';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bandhanaa.vercel.app';
 
@@ -85,7 +86,10 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="site-body">{children}</body>
+      <body className="site-body">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
