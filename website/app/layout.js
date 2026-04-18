@@ -5,13 +5,30 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bandhanaa.vercel.ap
 export const metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Bandhanaa Matrimony App | Modern Matchmaking Website',
+    default: 'Bandhanaa | App-First Matchmaking Website',
     template: '%s | Bandhanaa',
   },
   description:
-    'Bandhanaa is a modern matrimony website and matchmaking app with detailed profiles, private chat, shortlist tools, and Android APK or iPhone app download links.',
+    'Bandhanaa is a soft, app-first matchmaking website with smart search, likes and interests, and Android or iPhone download paths.',
   keywords: [
     'Bandhanaa',
+    'matrimony',
+    'dating',
+    'dating app',
+    'dating website',
+    'dating platform',
+    'online dating',
+    'Tamil Matrimony',
+    'Matrimony Site',
+    'Free Registration',
+    'Happy Marriages',
+    'Matrimony near me',
+    'Matrimony meaning',
+    'Matrimony Bangalore',
+    'Matrimony Login',
+    'Free matrimony Bangalore',
+    'Matrimonial website & android app',
+    'online chatting',
     'Bandhanaa matrimony',
     'matrimony website',
     'matrimony app',
@@ -26,9 +43,9 @@ export const metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'Bandhanaa Matrimony App | Modern Matchmaking Website',
+    title: 'Bandhanaa | App-First Matchmaking Website',
     description:
-      'Discover thoughtful matrimony profiles, search with clarity, chat privately, and download the Bandhanaa app for Android or iPhone.',
+      'Explore a lighter Bandhanaa landing page shaped by the app UI, with smart search, interests, and direct mobile download actions.',
     url: '/',
     siteName: 'Bandhanaa',
     locale: 'en_US',
@@ -44,9 +61,9 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Bandhanaa Matrimony App | Modern Matchmaking Website',
+    title: 'Bandhanaa | App-First Matchmaking Website',
     description:
-      'A modern matrimony landing page with app download links, secure chat positioning, and search-friendly matchmaking content.',
+      'A pastel, app-first Bandhanaa landing page with smart search previews, interests, and mobile download links.',
     images: ['/twitter-image'],
   },
   icons: {
@@ -61,8 +78,8 @@ export const metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#050505',
-  colorScheme: 'dark',
+  themeColor: '#f7fcfd',
+  colorScheme: 'light',
 };
 
 export default function RootLayout({ children }) {
