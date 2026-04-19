@@ -9,7 +9,6 @@ import {
   Image,
   Platform,
   ActivityIndicator,
-  Alert,
   Keyboard,
   Animated,
 } from 'react-native';
@@ -19,6 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { ConversationSkeleton } from '../components/Skeleton';
+import Alert from '../lib/alert';
 import { getChatMessages, sendChatMessage } from '../lib/api';
 import { getProfileImageSource } from '../lib/profileImage';
 import { Colors, Radii, Shadows, Spacing } from '../theme/theme';

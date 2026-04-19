@@ -8,7 +8,6 @@ import {
   Platform,
   KeyboardAvoidingView,
   ScrollView,
-  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -17,6 +16,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { FormScreenSkeleton } from '../components/Skeleton';
 import SelectField from '../components/SelectField';
+import Alert from '../lib/alert';
 import { getMyProfile, updateMyPreferences } from '../lib/api';
 import {
   COUNTRY_OPTIONS,

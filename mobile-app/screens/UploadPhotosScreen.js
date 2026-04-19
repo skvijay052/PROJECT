@@ -6,7 +6,6 @@ import {
   FlatList,
   Image,
   StyleSheet,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -16,6 +15,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 
 import { PhotoGallerySkeleton } from '../components/Skeleton';
+import Alert from '../lib/alert';
 import { deleteMyPhoto, getMyPhotos, setMyPrimaryPhoto, uploadMyPhoto } from '../lib/api';
 import { Colors, Radii, Shadows, Spacing } from '../theme/theme';
 

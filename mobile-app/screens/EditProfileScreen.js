@@ -8,7 +8,6 @@ import {
   Platform,
   KeyboardAvoidingView,
   ScrollView,
-  Alert,
   Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,6 +17,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { FormScreenSkeleton } from '../components/Skeleton';
 import SelectField from '../components/SelectField';
+import Alert from '../lib/alert';
 import { getMyProfile, upsertMyProfile } from '../lib/api';
 import { getProfileImageSource, hasProfileImage } from '../lib/profileImage';
 import {

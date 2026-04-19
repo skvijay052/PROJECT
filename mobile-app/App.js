@@ -18,6 +18,7 @@ import ProfileDetailScreen from './screens/ProfileDetailScreen';
 import ChatDetailScreen from './screens/ChatDetailScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import AppBackground from './components/AppBackground';
+import AppAlertHost from './components/AppAlertHost';
 import { Colors } from './theme/theme';
 
 const Stack = createStackNavigator();
@@ -96,6 +97,7 @@ export default function App() {
             <Stack.Screen name="ChatDetail" component={ChatDetailWithBackground} options={{ headerShown: false }} />
           </Stack.Navigator>
         </NavigationContainer>
+        <AppAlertHost />
       </View>
     </SafeAreaProvider>
   );

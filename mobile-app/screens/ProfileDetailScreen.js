@@ -8,7 +8,6 @@ import {
   ScrollView,
   Modal,
   Platform,
-  Alert,
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
@@ -17,6 +16,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 
+import Alert from '../lib/alert';
 import {
   getProfileById,
   getMatches,

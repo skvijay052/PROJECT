@@ -13,11 +13,14 @@ export const Colors = {
   muted: '#666A76',
   border: 'rgba(147, 151, 181, 0.22)',
   online: '#2ECC71',
+  success: '#2ECC71',
+  warning: '#F5A524',
   danger: '#FF5A5F',
   tabInactive: '#9DA0AF',
   accent: '#A02DFF',
   accentSoft: '#CAA5FF',
   accentGlow: '#F3E9FF',
+  overlay: 'rgba(17, 17, 20, 0.28)',
 };
 
 export const Radii = {

@@ -10,7 +10,6 @@ import {
   Platform,
   KeyboardAvoidingView,
   ScrollView,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,6 +17,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 
+import Alert from '../lib/alert';
 import {
   addToShortlist,
   getMyProfile,
