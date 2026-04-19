@@ -2044,9 +2044,11 @@ img {
   }
 
   .store-button {
-    min-height: 46px;
-    padding: 9px 11px;
-    gap: 9px;
+          gap: 9px;
+          min-height: 46px;
+          padding: 13px 11px;
+          max-width: 200px;
+          margin: auto;
   }
 
   .store-button__badge {
